@@ -50,7 +50,7 @@ def client_greeting(message):
 
 
 def server_choise(number):
-    return b'\x05' + number(1, 'big')
+    return b'\x05' + number.to_bytes(1, 'big')
 
 
 def client_connection(message):
@@ -62,4 +62,5 @@ def client_connection(message):
 
 
 def server_connection(status):
-    return b'\x05' + status.to_bytes(1, 'big')
+    return (b'\x05' + status.to_bytes(1, 'big') +
+            b'\x00\x01\x00\x00\x00\x00\x00\x00')
