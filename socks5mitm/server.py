@@ -3,6 +3,7 @@ This module contains SOCKS5 handler and TCP server
 '''
 
 import socketserver
+import socks5mitm.protocol as protocol
 import socket
 import select
 
@@ -47,40 +48,44 @@ class SOCKS5handler:
         exchange_loop(self.request, create_socket(*address), self)
 
     def handle_handshake(self):
-        return
+        self.request.recv(32)
+        self.request.send(protocol.server_choise(0))
 
     def handle_address(self):
-        return ('1.1.1.1', 3333)
+        message = self.request.recv(1024)
+        self.request.send(protocol.server_connection(0))
+        return protocol.client_connection(message).pair
 
-    def handle_send(self):
+    def handle_send(self, data):
         return
 
-    def handle_recive(self):
+    def handle_recive(self, data):
         return
 
 
-class TCPhandler(socketserver.BaseRequestHandler):
-    '''
-    TCP handler, that uses your SOCKS5 handler.
-    '''
-    def __init__(self, handler):
-        self.handler = handler
-
-    def handle(self):
-        self.handler(self.request).handle()
-
-
-class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-    '''
-    Multithreaded (async) TCP server.
-    Modern browsers are making requests to the server async,
-    so we need it even for only one client
-    '''
-    allow_reuse_address = True
-
-
-def start_server(handler=SOCKS5handler, host='0.0.0.0', port=4444):
+def start_server(sockshandler=SOCKS5handler, host='0.0.0.0', port=4444):
     '''
     Starts SOCKS5 server.
     '''
-    ThreadedTCPServer((host, port), TCPhandler(handler))
+    class TCPhandler(socketserver.BaseRequestHandler):
+        '''
+        TCP handler, that uses your SOCKS5 handler.
+        '''
+        handler = sockshandler
+
+        def handle(self):
+            try:
+                self.handler(self.request).handle()
+            except:
+                ...
+
+    class ThreadedTCPServer(socketserver.ThreadingMixIn,
+                            socketserver.TCPServer):
+        '''
+        Multithreaded (async) TCP server.
+        Modern browsers are making requests to the server async,
+        so we need it even for only one client
+        '''
+        allow_reuse_address = True
+
+    ThreadedTCPServer((host, port), TCPhandler).serve_forever()
