@@ -32,11 +32,11 @@ class Address():
     def __ipv6(self, addr: bytes):
         assert len(addr) == 17
 
-        def t_byte(integer):
-            num = hex(integer)[2:]
+        def t_byte(iterator):
+            num = hex(addr[iterator+1])[2:]
             return ('0' if len(num) == 1 else '') + num
 
-        self.__text = ':'.join([t_byte(i*2)+t_byte(i*2+1) for i in range(8)])
+        self.__text = ':'.join([t_byte(i*2)+t_byte((i*2)+1) for i in range(8)])
 
 
 def client_greeting(message):
