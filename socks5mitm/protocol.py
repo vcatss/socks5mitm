@@ -7,7 +7,52 @@ class Address():
     '''
     Contains address in binary and text format.
     '''
-    def __init__(self, binary):
+    def __init__(self, data):
+        if isinstance(data, bytes):
+            self.__byte(data)
+        else:
+            self.__pair(data)
+
+    def __pair(self, data):
+        type_ = data[0]
+        assert type_ in ['ipv4', 'ipv6', 'domain']
+        pair = data[1]
+        assert len(pair) == 2
+        self.pair = pair
+        if type_ == 'ipv4':
+            self.__to_ipv4(pair)
+        if type_ == 'domain':
+            self.__to_domain(pair)
+        if type_ == 'ipv6':
+            self.__to_ipv6(pair)
+
+    def __to_ipv4(self, pair):
+        addr = [int(i) for i in pair[0].split('.')]
+        assert len(addr) == 4
+        binary = b'\x01'
+        for i in addr:
+            binary += i.to_bytes(1, 'big')
+        binary += pair[1].to_bytes(2, 'big')
+        self.binary = binary
+
+    def __to_domain(self, pair):
+        binary = b'\x03'
+        binary += len(pair[0]).to_bytes(1, 'big')
+        binary += pair[0].encode('utf-8')
+        binary += pair[1].to_bytes(2, 'big')
+        self.binary = binary
+
+    def __to_ipv6(self, pair):
+        binary = b'\x04'
+        text = pair[0].replace(':', '')
+        assert len(text) == 32
+        text = [int(text[i*2:i*2+2], 16) for i in range(16)]
+        for i in text:
+            binary += i.to_bytes(1, 'big')
+        binary += pair[1].to_bytes(2, 'big')
+        self.binary = binary
+
+    def __byte(self, binary):
         self.binary = binary
         port = int.from_bytes(binary[-2:], 'big')
         type_ = binary[0]
