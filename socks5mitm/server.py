@@ -1,6 +1,6 @@
-'''
+"""
 This module contains SOCKS5 handler and TCP server
-'''
+"""
 
 import socketserver
 import socks5mitm.protocol as protocol
@@ -9,9 +9,9 @@ import select
 
 
 def exchange_loop(client, remote, handler):
-    '''
+    """
     Sends client's data to remote and remote's to client.
-    '''
+    """
     while True:
         ready, _, _ = select.select([client, remote], [], [])
         if client in ready:
@@ -27,18 +27,19 @@ def exchange_loop(client, remote, handler):
 
 
 def create_socket(host, port):
-    '''
+    """
     Creates socket for target (remote) server.
-    '''
+    """
     skt = socket.socket()
     skt.connect((host, port))
     return skt
 
 
 class SOCKS5handler:
-    '''
+    """
     This class handles client's requests.
-    '''
+    """
+
     def __init__(self, request):
         self.request = request
 
@@ -63,14 +64,16 @@ class SOCKS5handler:
         return
 
 
-def start_server(sockshandler=SOCKS5handler, host='0.0.0.0', port=4444):
-    '''
+def start_server(sockshandler=SOCKS5handler, host="127.0.0.1", port=4444):
+    """
     Starts SOCKS5 server.
-    '''
+    """
+
     class TCPhandler(socketserver.BaseRequestHandler):
-        '''
+        """
         TCP handler, that uses your SOCKS5 handler.
-        '''
+        """
+
         handler = sockshandler
 
         def handle(self):
@@ -79,13 +82,13 @@ def start_server(sockshandler=SOCKS5handler, host='0.0.0.0', port=4444):
             except:
                 ...
 
-    class ThreadedTCPServer(socketserver.ThreadingMixIn,
-                            socketserver.TCPServer):
-        '''
+    class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+        """
         Multithreaded (async) TCP server.
         Modern browsers are making requests to the server async,
         so we need it even for only one client
-        '''
+        """
+
         allow_reuse_address = True
 
     ThreadedTCPServer((host, port), TCPhandler).serve_forever()
