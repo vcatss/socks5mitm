@@ -7,6 +7,11 @@ import socks5mitm.protocol as protocol
 import socket
 import select
 
+recv_bytes = 0
+send_bytes = 0
+
+_host = ""
+_port = 0
 
 def exchange_loop(client, remote, handler):
     """
@@ -58,9 +63,15 @@ class SOCKS5handler:
         return protocol.client_connection(message).pair
 
     def handle_send(self, data):
+        global send_bytes
+        send_bytes += len(data)/1024/1024
+        print(f"[{_host}:{_port}] send >>> {send_bytes}")
         return
 
     def handle_recive(self, data):
+        global recv_bytes
+        recv_bytes += len(data)/1024/1024
+        print(f"[{_host}:{_port}] revc <<< {recv_bytes}")
         return
 
 
@@ -91,4 +102,8 @@ def start_server(sockshandler=SOCKS5handler, host="127.0.0.1", port=4444):
 
         allow_reuse_address = True
 
+    global _host,_port
+    _host = host
+    _port = port
     ThreadedTCPServer((host, port), TCPhandler).serve_forever()
+
