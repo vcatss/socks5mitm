@@ -23,7 +23,8 @@ class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
-        skt = proxy.socks5((socks5_ip, socks5_port), address)
+        #skt = proxy.socks5((socks5_ip, socks5_port), address)
+        #skt = create_socket(*address)
         exchange_loop(self.request, skt, self)
 
     def handle_address(self):
@@ -32,11 +33,11 @@ class Handle(SOCKS5handler):
         return protocol.client_connection(message)
 
 print(f"Starting 127.0.0.1:{port}...")
-start_server(Handle, port=port)
+#start_server(Handle, port=port)
 
 
 # print(f"Starting 127.0.0.1:{port}...")
-# start_server(host="127.0.0.1", port=port)
+start_server(host="0.0.0.0", port=port)
 
 
 # TMproxy = tmproxy.TMPRoxy("https://tmproxy.com/api/proxy", "TL9gl9QD2FqLXmWs2DReiX61TEmxsfMoiCYy74")

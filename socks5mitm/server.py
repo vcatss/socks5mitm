@@ -54,7 +54,6 @@ def create_socket(host, port):
     """
     skt = socket.socket()
     skt.connect((host, port))
-    #skt.connect(("103.79.142.15", 40035))
     return skt
 
 
@@ -88,12 +87,12 @@ class SOCKS5handler:
         global send_bytes
         send_bytes += len(data)/1024/1024
         print(f"{bcolors.WARNING}[{self.ip}:{_port}] send >>> {round(send_bytes, 4)} {bcolors.WHITE}")
-        return
+        
     def handle_recive(self, data):
         global recv_bytes
         recv_bytes += len(data)/1024/1024
         print(f"{bcolors.OKGREEN}[{self.ip}:{_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
-        return
+        
 def start_server(sockshandler=SOCKS5handler, host="127.0.0.1", port=4444):
     """
     Starts SOCKS5 server.
