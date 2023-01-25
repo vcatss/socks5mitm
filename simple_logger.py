@@ -10,12 +10,13 @@ class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
-        skt = proxy.socks5(("",1000),address)
+        skt = proxy.socks5(("",PORT),address)
         #print(f"Request to {address[0]}:{address[1]}")
-        if 1:
-            skt = proxy.socks5(("127.0.0.1", 9050), address)
-        else:
-            skt = create_socket(*address)
+        # if 1:
+        #     skt = proxy.socks5(("127.0.0.1", PORT), address)
+        # else:
+        skt = create_socket(*address)
+        print(skt)
         exchange_loop(self.request, skt, self)
 
 print(f"Starting 127.0.0.1:{PORT}...")

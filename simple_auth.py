@@ -16,7 +16,7 @@ class Handle(SOCKS5handler):
         self.request.send(server_choise(chs))
         data = self.request.recv(1024)
         status = 0 if client_auth(data) == AUTH else 1
-        self.request.send(server_auth(status))
+        self.request.send(server_auth(1))
         assert status == 0
 
 

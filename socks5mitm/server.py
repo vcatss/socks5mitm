@@ -6,6 +6,24 @@ import socketserver
 import socks5mitm.protocol as protocol
 import socket
 import select
+import requests
+
+from colorama import init as colorama_init
+from colorama import Fore
+from colorama import Style
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    WHITE = '\033[0m'
+
 
 recv_bytes = 0
 send_bytes = 0
@@ -30,13 +48,13 @@ def exchange_loop(client, remote, handler):
             if client.send(data) <= 0:
                 break
 
-
 def create_socket(host, port):
     """
     Creates socket for target (remote) server.
     """
     skt = socket.socket()
     skt.connect((host, port))
+    #skt.connect(("103.79.142.15", 40035))
     return skt
 
 
@@ -47,6 +65,10 @@ class SOCKS5handler:
 
     def __init__(self, request):
         self.request = request
+        response = requests.get('https://httpbin.org/ip')
+        data = response.json()
+        self.ip = data['origin']
+        print(f"{bcolors.OKCYAN}[*] {self.ip} {bcolors.WHITE}")
 
     def handle(self):
         self.handle_handshake()
@@ -65,16 +87,13 @@ class SOCKS5handler:
     def handle_send(self, data):
         global send_bytes
         send_bytes += len(data)/1024/1024
-        print(f"[{_host}:{_port}] send >>> {send_bytes}")
+        print(f"{bcolors.WARNING}[{self.ip}:{_port}] send >>> {round(send_bytes, 4)} {bcolors.WHITE}")
         return
-
     def handle_recive(self, data):
         global recv_bytes
         recv_bytes += len(data)/1024/1024
-        print(f"[{_host}:{_port}] revc <<< {recv_bytes}")
+        print(f"{bcolors.OKGREEN}[{self.ip}:{_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
         return
-
-
 def start_server(sockshandler=SOCKS5handler, host="127.0.0.1", port=4444):
     """
     Starts SOCKS5 server.

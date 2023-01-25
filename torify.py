@@ -11,10 +11,7 @@ class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
-        if address.pair[0].split(".")[-1] == "onion":
-            skt = proxy.socks5(("127.0.0.1", 9050), address)
-        else:
-            skt = create_socket(*address.pair)
+        skt = proxy.socks5(("116.96.17.21", 33513), address)
         exchange_loop(self.request, skt, self)
 
     def handle_address(self):

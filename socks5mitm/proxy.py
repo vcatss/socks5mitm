@@ -4,7 +4,6 @@ Using this module, you can redirect traffic through other proxies.
 
 from socks5mitm.server import create_socket
 
-
 def socks5(proxy, target):
     skt = create_socket(*proxy)
     skt.send(b"\x05\x01\x00")
