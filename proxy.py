@@ -77,15 +77,15 @@ def read_output(ip):
     thread = threading.Thread(target=execute_command, args=(ip,))
     thread.start()
 
-from apscheduler import Scheduler
+from threading import Timer
+class RepeatTimer(Timer):
+    def run(self):
+        while not self.finished.wait(self.interval):
+            self.function(*self.args, **self.kwargs)
 
-sched = Scheduler()
-sched.start()
+timer = RepeatTimer(3, read_output(getNewTMIP()))
+timer.start()
 
-def some_job():
-    print("Every 10 seconds")
-
-sched.add_interval_job(some_job, seconds = 10)
 
 # threading.Timer(130.0, read_output(getNewTMIP())).start()
 
