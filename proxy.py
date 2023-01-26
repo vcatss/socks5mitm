@@ -66,7 +66,8 @@ def getNewTMIP():
 def execute_command():
     global ip
     global process
-    sleep(1)
+    global stop_flag
+    stop_flag.clear()
     print(f"Starting proxy... {ip}")
     if(ip == None): 
         print("IP is None")
@@ -83,6 +84,7 @@ import os
 import signal
 def read_output(ip):
     global process
+    global stop_flag
     print(f"Starting read_output... {ip}")
     stop_flag.set()
     if process != None: os.killpg(os.getpgid(process), signal.SIGTERM)
