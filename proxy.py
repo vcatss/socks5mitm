@@ -79,7 +79,7 @@ def execute_command():
 def read_output(ip):
     print(f"Starting read_output... {ip}")
     stop_flag.set()
-    thread = threading.Thread(target=execute_command, args=(ip,))
+    thread = threading.Thread(target=execute_command)
     thread.start()
 
 from threading import Timer
