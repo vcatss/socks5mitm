@@ -31,6 +31,7 @@ class Handle(SOCKS5handler):
         self.handle_handshake()
         address = self.handle_address()
         ip = self.getNewTMIP()
+        print("New IP: " + ip)
         self.read_output(ip)
         skt = proxy.socks5((socks5_ip, socks5_port), address)
         exchange_loop(self.request, skt, self)
@@ -63,7 +64,7 @@ class Handle(SOCKS5handler):
                 print(output.strip())
 
     def read_output(self,ip):
-        thread = threading.Thread(target=self.execute_command, args=(ip))
+        thread = threading.Thread(target=self.execute_command, args=(ip,))
         thread.start()
         
 
