@@ -45,27 +45,28 @@ class Handle(SOCKS5handler):
 
 
 def getNewTMIP():
-        url = "https://tmproxy.com/api/proxy/get-new-proxy"
-        headers = {"Content-Type": "application/json"}
-        data = {"api_key": "da1e019fd5b8265e4177a85f29645d20", "id_location": 1}
-        response = requests.post(url, headers=headers, data=json.dumps(data))
-        print(response.json())
-        if (int(response.json()['code']) == 5) == True:
-            print("Get new IP fail")
-            print(f"Wait for {response.json()['data']['next_request']+1}")
-            sleep(response.json()['data']['next_request']+1)
-            getNewTMIP()
-        else:
-            print("Get new IP success")
-            print(response.json()['data']['socks5'])
-            global ip
-            ip = response.json()['data']['socks5']
-            return response.json()['data']['socks5']
+    global ip
+    url = "https://tmproxy.com/api/proxy/get-new-proxy"
+    headers = {"Content-Type": "application/json"}
+    data = {"api_key": "da1e019fd5b8265e4177a85f29645d20", "id_location": 1}
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    print(response.json())
+    if (int(response.json()['code']) == 5) == True:
+        print("Get new IP fail")
+        print(f"Wait for {response.json()['data']['next_request']+1}")
+        sleep(response.json()['data']['next_request']+1)
+        getNewTMIP()
+    else:
+        print("Get new IP success")
+        ip = response.json()['data']['socks5']
+        print(ip)
+        return response.json()['data']['socks5']
 
 
 def execute_command():
     global ip
     global process
+    sleep(1)
     print(f"Starting proxy... {ip}")
     if(ip == None): 
         print("IP is None")
