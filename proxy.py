@@ -7,7 +7,7 @@ import json
 import requests
 import subprocess
 import threading
-
+from threading import Event, Thread
 
 from socks5mitm.server import exchange_loop, create_socket
 from socks5mitm import protocol, proxy
@@ -77,7 +77,17 @@ def read_output(ip):
     thread = threading.Thread(target=execute_command, args=(ip,))
     thread.start()
 
-threading.Timer(130.0, read_output(getNewTMIP())).start()
+from apscheduler import Scheduler
+
+sched = Scheduler()
+sched.start()
+
+def some_job():
+    print("Every 10 seconds")
+
+sched.add_interval_job(some_job, seconds = 10)
+
+# threading.Timer(130.0, read_output(getNewTMIP())).start()
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
