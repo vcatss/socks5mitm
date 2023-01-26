@@ -58,6 +58,10 @@ def getNewTMIP():
             return response.json()['data']['socks5']
 
 def execute_command(ip):
+    print("Starting proxy... {ip}")
+    if(ip == None): 
+        print("IP is None")
+        return
     process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag.is_set():
         output = process.stdout.readline()
