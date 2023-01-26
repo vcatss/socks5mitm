@@ -44,7 +44,7 @@ class Handle(SOCKS5handler):
 def getNewTMIP():
         url = "https://tmproxy.com/api/proxy/get-new-proxy"
         headers = {"Content-Type": "application/json"}
-        data = {"api_key": "36c9e9ecb9677a8eb780f4d0802dc12f", "id_location": 1}
+        data = {"api_key": "da1e019fd5b8265e4177a85f29645d20", "id_location": 1}
         response = requests.post(url, headers=headers, data=json.dumps(data))
 
         if (int(response.json()['code']) == 5) == True:
@@ -54,6 +54,7 @@ def getNewTMIP():
             getNewTMIP()
         else:
             print("Get new IP success")
+            print(response.json()['data']['socks5'])
             return response.json()['data']['socks5']
 
 def execute_command(ip):
@@ -71,9 +72,7 @@ def read_output(ip):
     thread = threading.Thread(target=execute_command, args=(ip,))
     thread.start()
 
-ip = getNewTMIP()
-print(ip)
-threading.Timer(250.0, read_output(ip)).start()
+threading.Timer(250.0, read_output(getNewTMIP())).start()
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
