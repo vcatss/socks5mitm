@@ -3,7 +3,7 @@ import socks5mitm.protocol as protocol
 import socket
 import select
 import requests
-import socks
+
 
 from colorama import init as colorama_init
 from colorama import Fore
