@@ -31,7 +31,7 @@ class Handle(SOCKS5handler):
         self.handle_handshake()
         address = self.handle_address()
         ip = self.getNewTMIP()
-        self.read_output()
+        self.read_output(ip)
         skt = proxy.socks5((socks5_ip, socks5_port), address)
         exchange_loop(self.request, skt, self)
 
@@ -53,8 +53,8 @@ class Handle(SOCKS5handler):
             print("Get new IP success")
             return response.json()['data']['socks5']
 
-    def execute_command(self):
-        process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"0.0.0.0:{args.rport}", "-P", args.socks5], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    def execute_command(self,ip):
+        process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"0.0.0.0:{args.socks5_port}", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         while True:
             output = process.stdout.readline()
             if output == '' and process.poll() is not None:
@@ -62,8 +62,8 @@ class Handle(SOCKS5handler):
             if output:
                 print(output.strip())
 
-    def read_output(self):
-        thread = threading.Thread(target=self.execute_command)
+    def read_output(self,ip):
+        thread = threading.Thread(target=self.execute_command, args=(ip))
         thread.start()
         
 
