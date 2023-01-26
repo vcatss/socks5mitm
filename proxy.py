@@ -46,7 +46,7 @@ def getNewTMIP():
         headers = {"Content-Type": "application/json"}
         data = {"api_key": "da1e019fd5b8265e4177a85f29645d20", "id_location": 1}
         response = requests.post(url, headers=headers, data=json.dumps(data))
-
+        print(response.json())
         if (int(response.json()['code']) == 5) == True:
             print("Get new IP fail")
             print(f"Wait for {response.json()['data']['next_request']+1}")
