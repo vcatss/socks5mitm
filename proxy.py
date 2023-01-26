@@ -16,7 +16,6 @@ import argparse, sys
 parser=argparse.ArgumentParser()
 
 parser.add_argument("--port", help="Port of proxy")
-parser.add_argument("--rport", help="Port of proxy controller")
 parser.add_argument("--socks5", help="Import socks5 proxy")
 
 args=parser.parse_args()
@@ -33,7 +32,7 @@ class Handle(SOCKS5handler):
         address = self.handle_address()
         ip = self.getNewTMIP()
         self.read_output()
-        skt = proxy.socks5(('127.0.0.1', args.rport), address)
+        skt = proxy.socks5((socks5_ip, socks5_port), address)
         exchange_loop(self.request, skt, self)
 
     def handle_address(self):
