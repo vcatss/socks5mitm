@@ -58,7 +58,7 @@ def getNewTMIP():
             return response.json()['data']['socks5']
 
 def execute_command(ip):
-    print("Starting proxy... {ip}")
+    print(f"Starting proxy... {ip}")
     if(ip == None): 
         print("IP is None")
         return
