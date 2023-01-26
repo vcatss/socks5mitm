@@ -46,6 +46,7 @@ class Handle(SOCKS5handler):
         headers = {"Content-Type": "application/json"}
         data = {"api_key": "36c9e9ecb9677a8eb780f4d0802dc12f", "id_location": 1}
         response = requests.post(url, headers=headers, data=json.dumps(data))
+        print(response.json())
         if response.json()['code'] == 5:
             print("Get new IP fail, wait for " + response.json()['data']['next_request'])
             sleep(response.json()['data']['next_request']+1)
