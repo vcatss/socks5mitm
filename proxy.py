@@ -47,8 +47,10 @@ class Handle(SOCKS5handler):
         data = {"api_key": "36c9e9ecb9677a8eb780f4d0802dc12f", "id_location": 1}
         response = requests.post(url, headers=headers, data=json.dumps(data))
         print(response.json())
-        if response.json()['code'] == 5:
-            print("Get new IP fail, wait for " + response.json()['data']['next_request'])
+        print(int(response.json()['code']) == 5)
+        if (int(response.json()['code']) == 5) == True:
+            print("Get new IP fail")
+            print(f"Wait for {response.json()['data']['next_request']+1}")
             sleep(response.json()['data']['next_request']+1)
             self.getNewTMIP()
         else:
@@ -56,7 +58,7 @@ class Handle(SOCKS5handler):
             return response.json()['data']['socks5']
 
     def execute_command(self,ip):
-        process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"0.0.0.0:{args.socks5_port}", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"0.0.0.0:{socks5_port}", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         while True:
             output = process.stdout.readline()
             if output == '' and process.poll() is not None:
