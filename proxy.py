@@ -71,7 +71,9 @@ def read_output(ip):
     thread = threading.Thread(target=execute_command, args=(ip,))
     thread.start()
 
-threading.Timer(250.0, read_output(getNewTMIP())).start()
+ip = getNewTMIP()
+print(ip)
+threading.Timer(250.0, read_output(ip)).start()
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
