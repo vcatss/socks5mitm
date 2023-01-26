@@ -1,12 +1,9 @@
-"""
-This module contains SOCKS5 handler and TCP server
-"""
-
 import socketserver
 import socks5mitm.protocol as protocol
 import socket
 import select
 import requests
+import socks
 
 from colorama import init as colorama_init
 from colorama import Fore
@@ -35,6 +32,7 @@ def exchange_loop(client, remote, handler):
     """
     Sends client's data to remote and remote's to client.
     """
+    
     while True:
         ready, _, _ = select.select([client, remote], [], [])
         if client in ready:
@@ -70,6 +68,7 @@ class SOCKS5handler:
         self.ip = data['origin']
         print(f"{bcolors.OKCYAN}[*] {self.ip} {bcolors.WHITE}")
 
+
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
@@ -96,15 +95,7 @@ class SOCKS5handler:
         print(f"{bcolors.OKGREEN}[{self.ip}:{_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
 
 def start_server(sockshandler=SOCKS5handler, host="0.0.0.0", port=4444):
-    """
-    Starts SOCKS5 server.
-    """
-
     class TCPhandler(socketserver.BaseRequestHandler):
-        """
-        TCP handler, that uses your SOCKS5 handler.
-        """
-
         handler = sockshandler
 
         def handle(self):
@@ -114,12 +105,6 @@ def start_server(sockshandler=SOCKS5handler, host="0.0.0.0", port=4444):
                 ...
 
     class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-        """
-        Multithreaded (async) TCP server.
-        Modern browsers are making requests to the server async,
-        so we need it even for only one client
-        """
-
         allow_reuse_address = True
 
     global _host,_port
