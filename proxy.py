@@ -26,6 +26,8 @@ socks5 = args.socks5
 socks5_ip = socks5.split(':')[0]
 socks5_port = int(socks5.split(':')[1])
 
+stop_flag = threading.Event()
+
 class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
@@ -44,7 +46,7 @@ def getNewTMIP():
         headers = {"Content-Type": "application/json"}
         data = {"api_key": "36c9e9ecb9677a8eb780f4d0802dc12f", "id_location": 1}
         response = requests.post(url, headers=headers, data=json.dumps(data))
-        print(response.json())
+
         print(int(response.json()['code']) == 5)
         if (int(response.json()['code']) == 5) == True:
             print("Get new IP fail")
@@ -57,18 +59,22 @@ def getNewTMIP():
 
 def execute_command(ip):
     process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    while True:
+    while not stop_flag.is_set():
         output = process.stdout.readline()
         if output == '' and process.poll() is not None:
             break
         if output:
             print(output.strip())
+    
 
 def read_output(ip):
+    stop_flag.set()
     thread = threading.Thread(target=execute_command, args=(ip,))
     thread.start()
 
 read_output(getNewTMIP())
+
+threading.Timer(250.0, read_output(getNewTMIP())).start()
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
