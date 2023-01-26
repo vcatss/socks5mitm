@@ -64,16 +64,16 @@ def getNewTMIP():
 def execute_command():
     global ip
     print(f"Starting proxy... {ip}")
-    if(ip == None): 
-        print("IP is None")
-        return
-    process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    while not stop_flag.is_set():
-        output = process.stdout.readline()
-        if output == '' and process.poll() is not None:
-            break
-        if output:
-            print(output.strip())
+    # if(ip == None): 
+    #     print("IP is None")
+    #     return
+    # process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # while not stop_flag.is_set():
+    #     output = process.stdout.readline()
+    #     if output == '' and process.poll() is not None:
+    #         break
+    #     if output:
+    #         print(output.strip())
     
 
 def read_output(ip):
@@ -120,7 +120,13 @@ class InfiniteTimer():
 
 
 # Example Usage
-t = InfiniteTimer(5, read_output(getNewTMIP()))
+#read_output(getNewTMIP())
+
+def test():
+    print('a')
+    read_output(getNewTMIP())
+
+t = InfiniteTimer(5, test)
 t.start()
 
 # threading.Timer(130.0, read_output(getNewTMIP())).start()
