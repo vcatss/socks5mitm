@@ -27,6 +27,7 @@ socks5_ip = socks5.split(':')[0]
 socks5_port = int(socks5.split(':')[1])
 
 ip = None
+process = None
 
 stop_flag = threading.Event()
 
@@ -61,24 +62,29 @@ def getNewTMIP():
             ip = response.json()['data']['socks5']
             return response.json()['data']['socks5']
 
+
 def execute_command():
     global ip
+    global process
     print(f"Starting proxy... {ip}")
-    # if(ip == None): 
-    #     print("IP is None")
-    #     return
-    # process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # while not stop_flag.is_set():
-    #     output = process.stdout.readline()
-    #     if output == '' and process.poll() is not None:
-    #         break
-    #     if output:
-    #         print(output.strip())
+    if(ip == None): 
+        print("IP is None")
+        return
+    process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    while not stop_flag.is_set():
+        output = process.stdout.readline()
+        if output == '' and process.poll() is not None:
+            break
+        if output:
+            print(output.strip())
     
-
+import os
+import signal
 def read_output(ip):
+    global process
     print(f"Starting read_output... {ip}")
     stop_flag.set()
+    os.killpg(os.getpgid(process), signal.SIGTERM)
     thread = threading.Thread(target=execute_command)
     thread.start()
 
