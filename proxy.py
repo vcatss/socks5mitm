@@ -30,9 +30,6 @@ class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
-        ip = self.getNewTMIP()
-        print("New IP: " + ip)
-        self.read_output(ip)
         skt = proxy.socks5((socks5_ip, socks5_port), address)
         exchange_loop(self.request, skt, self)
 
@@ -41,7 +38,8 @@ class Handle(SOCKS5handler):
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
 
-    def getNewTMIP(self):
+
+def getNewTMIP():
         url = "https://tmproxy.com/api/proxy/get-new-proxy"
         headers = {"Content-Type": "application/json"}
         data = {"api_key": "36c9e9ecb9677a8eb780f4d0802dc12f", "id_location": 1}
@@ -52,24 +50,25 @@ class Handle(SOCKS5handler):
             print("Get new IP fail")
             print(f"Wait for {response.json()['data']['next_request']+1}")
             sleep(response.json()['data']['next_request']+1)
-            self.getNewTMIP()
+            getNewTMIP()
         else:
             print("Get new IP success")
             return response.json()['data']['socks5']
 
-    def execute_command(self,ip):
-        process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"0.0.0.0:{socks5_port}", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        while True:
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
-                break
-            if output:
-                print(output.strip())
+def execute_command(ip):
+    process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    while True:
+        output = process.stdout.readline()
+        if output == '' and process.poll() is not None:
+            break
+        if output:
+            print(output.strip())
 
-    def read_output(self,ip):
-        thread = threading.Thread(target=self.execute_command, args=(ip,))
-        thread.start()
-        
+def read_output(ip):
+    thread = threading.Thread(target=execute_command, args=(ip,))
+    thread.start()
+
+read_output(getNewTMIP())
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
