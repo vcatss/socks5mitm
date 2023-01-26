@@ -95,7 +95,7 @@ class SOCKS5handler:
         #recv_mbs = recv_bytes / 1024
         print(f"{bcolors.OKGREEN}[{self.ip}:{_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
 
-def start_server(sockshandler=SOCKS5handler, host="127.0.0.1", port=4444):
+def start_server(sockshandler=SOCKS5handler, host="0.0.0.0", port=4444):
     """
     Starts SOCKS5 server.
     """
