@@ -26,6 +26,8 @@ socks5 = args.socks5
 socks5_ip = socks5.split(':')[0]
 socks5_port = int(socks5.split(':')[1])
 
+ip = None
+
 stop_flag = threading.Event()
 
 class Handle(SOCKS5handler):
@@ -55,9 +57,12 @@ def getNewTMIP():
         else:
             print("Get new IP success")
             print(response.json()['data']['socks5'])
+            global ip
+            ip = response.json()['data']['socks5']
             return response.json()['data']['socks5']
 
-def execute_command(ip):
+def execute_command():
+    global ip
     print(f"Starting proxy... {ip}")
     if(ip == None): 
         print("IP is None")
