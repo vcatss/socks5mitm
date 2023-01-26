@@ -48,6 +48,7 @@ def exchange_loop(client, remote, handler):
             if client.send(data) <= 0:
                 break
 
+
 def create_socket(host, port):
     """
     Creates socket for target (remote) server.
@@ -87,13 +88,14 @@ class SOCKS5handler:
         global send_bytes
         send_bytes += len(data)/1024/1024
         print(f"{bcolors.WARNING}[{self.ip}:{_port}] send >>> {round(send_bytes, 4)} {bcolors.WHITE}")
-        
+
     def handle_recive(self, data):
         global recv_bytes
         recv_bytes += len(data)/1024/1024
+        #recv_mbs = recv_bytes / 1024
         print(f"{bcolors.OKGREEN}[{self.ip}:{_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
-        
-def start_server(sockshandler=SOCKS5handler, host="0.0.0.0", port=4444):
+
+def start_server(sockshandler=SOCKS5handler, host="127.0.0.1", port=4444):
     """
     Starts SOCKS5 server.
     """

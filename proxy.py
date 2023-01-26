@@ -25,7 +25,6 @@ class Handle(SOCKS5handler):
         address = self.handle_address()
         print(address.host)
         skt = proxy.socks5((socks5_ip, socks5_port), address)
-        #skt = create_socket(*address)
         exchange_loop(self.request, skt, self)
 
     def handle_address(self):
