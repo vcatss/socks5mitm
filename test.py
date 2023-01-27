@@ -8,4 +8,5 @@ output = subprocess.run(["ufw", "status", "numbered"], capture_output=True, text
 
 # Search for the rule with port 1080
 for line in output.stdout.split("\n"):
-   print(f"{line.split()[0]}")
+    number = str(line).split(' ')[0].replace('[','').replace(']','')
+    print(number)
