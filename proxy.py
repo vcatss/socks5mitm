@@ -62,7 +62,7 @@ class Handle(SOCKS5handler):
     def handle_address(self):
         global checked
         global client_ip
-        if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0"  and checked == False: return
+        if checked == False: return
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
@@ -128,7 +128,6 @@ def execute_command2():
                 s = str(output.strip())
                 print(s)
                 if "connected" in s:
-                    print("???????")
                     match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', s)
                     client_ip = match.group(1)
                     print(f"{bcolors.OKBLUE}[==>*] {client_ip} {bcolors.WHITE}")
