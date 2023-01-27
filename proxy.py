@@ -127,7 +127,7 @@ def execute_command2():
                 match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
                 client_ip = match.group(1)
                 if match:
-                    if match.group(1) == allowip:
+                    if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0" and match.group(1) == allowip:
                         print(f"{bcolors.OKGREEN}[*] Checked OK {bcolors.WHITE}")
                         checked = True
                     else:
