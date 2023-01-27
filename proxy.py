@@ -47,7 +47,7 @@ ip = None
 client_ip = None
 process = None
 process2 = None
-checked = False
+checked = True
 
 stop_flag = threading.Event()
 stop_flag2 = threading.Event()
@@ -64,11 +64,10 @@ class Handle(SOCKS5handler):
     def handle_address(self):
         global checked
         global client_ip
-        print(f"{bcolors.HEADER}[*] Handle address {checked} {bcolors.WHITE}")
+        print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE} : {checked}")
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
-
 
 def getNewTMIP():
     global ip
@@ -134,7 +133,7 @@ def execute_command2():
                     client_ip = match.group(1)
                     print(f"{bcolors.OKBLUE}[==>*] {client_ip} {bcolors.WHITE}")
                     if match:
-                        if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0" and client_ip != allowip:
+                        if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0" and match.group(1) != allowip:
                             print(f"{bcolors.FAIL}[*] Checked Fail {bcolors.WHITE}")
                             checked = False
                         else:
@@ -150,16 +149,19 @@ import os
 import signal
 def read_output(ip):
     global process
+    global process2
     global stop_flag
     print(f"Starting read_output... {ip}")
     stop_flag.set()
 
     if process != None: process.terminate()
+    if process2 != None: process2.terminate()
 
     thread = threading.Thread(target=execute_command)
     thread.start()
 
-   
+    thread2 = threading.Thread(target=execute_command2)
+    thread2.start()
 
 from threading import Timer
 class InfiniteTimer():
@@ -209,9 +211,6 @@ t = InfiniteTimer(5, test)
 t.start()
 
 # threading.Timer(130.0, read_output(getNewTMIP())).start()
-thread2 = threading.Thread(target=execute_command2)
-thread2.start()
-
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
