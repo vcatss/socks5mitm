@@ -3,6 +3,7 @@ from socks5mitm.server import SOCKS5handler, start_server
 import tmproxy.tmproxy as tmproxy
 import minproxy.proxy as minproxy
 
+import re
 import json
 import requests
 import subprocess
@@ -11,6 +12,20 @@ from threading import Event, Thread
 
 from socks5mitm.server import exchange_loop, create_socket
 from socks5mitm import protocol, proxy
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    WHITE = '\033[0m'
+
 
 import argparse, sys
 parser=argparse.ArgumentParser()
@@ -98,6 +113,9 @@ def execute_command2():
             if output == '' and process2.poll() is not None:
                 break
             if output:
+                match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', output.strip())
+                if match:
+                    print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
                 print(output.strip())
         except:
             print("Error")
