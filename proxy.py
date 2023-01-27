@@ -115,12 +115,12 @@ def execute_command2():
             if output == '' and process2.poll() is not None:
                 break
             if output:
-                match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', output.strip())
-                if match:
-                    print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
+                # match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', output.strip())
+                # if match:
+                #     print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
                 print(output.strip())
-        except:
-            print("Error")
+        except Exception as e:
+            print("Error" + e)
             break
     
 import os
