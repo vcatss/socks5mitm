@@ -59,8 +59,10 @@ class Handle(SOCKS5handler):
 
         print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE}")
         #sleep 0,1s
+        print(client_ip + "???")
         while(client_ip == None):
-            sleep(0.001)
+            print(client_ip)
+            sleep(1)
         client_ip = None
 
         if checked == False: return
