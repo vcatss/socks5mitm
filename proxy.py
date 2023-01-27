@@ -114,6 +114,7 @@ def execute_command2():
     global stop_flag2
     global checked
     global client_ip
+    stop_flag2.set()
     stop_flag2.clear()
 
     process2 = None
@@ -149,7 +150,6 @@ def read_output(ip):
     global stop_flag
     print(f"Starting read_output... {ip}")
     stop_flag.set()
-    stop_flag2.set()
 
     if process != None: process.terminate()
     if process2 != None: process2.terminate()
