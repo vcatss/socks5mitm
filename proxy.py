@@ -54,12 +54,11 @@ def getNewTMIP():
     if (int(response.json()['code']) == 5) == True:
         print("Get new IP fail")
         print(f"Wait for {response.json()['data']['next_request']+1}")
-        sleep(response.json()['data']['next_request']+1)
+        #sleep(response.json()['data']['next_request']+1)
         getNewTMIP()
     else:
         print("Get new IP success")
         ip = response.json()['data']['socks5']
-        print(ip)
         return response.json()['data']['socks5']
 
 
@@ -72,6 +71,7 @@ def execute_command():
     if(ip == None): 
         print("IP is None")
         return
+    process = None
     process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag.is_set():
         output = process.stdout.readline()
@@ -132,7 +132,7 @@ class InfiniteTimer():
 #read_output(getNewTMIP())
 
 def test():
-    print('a')
+    print('Timer')
     read_output(getNewTMIP())
 
 t = InfiniteTimer(5, test)
