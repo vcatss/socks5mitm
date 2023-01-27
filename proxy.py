@@ -59,7 +59,7 @@ class Handle(SOCKS5handler):
         self.handle_handshake()
         address = self.handle_address()
         skt = proxy.socks5(("127.0.0.1", port+1), address)
-        exchange_loop(self.request, skt, self,checked)
+        exchange_loop(self.request, skt, self)
 
     def handle_address(self):
         global checked
