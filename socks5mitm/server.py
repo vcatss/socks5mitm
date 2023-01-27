@@ -63,7 +63,14 @@ class SOCKS5handler:
 
     def __init__(self, request):
         self.request = request
-        print(request['raddr'])
+        raddr = request
+        import re
+        raddr_match = re.search(r"raddr=\('(.*?)', (.*?)\)", str(raddr))
+        if raddr_match:
+            ip = raddr_match.group(1)
+            port = raddr_match.group(2)
+            raddr = (ip, int(port))
+            print(f"{bcolors.OKCYAN}[*] {ip}:{port} Connection {bcolors.WHITE}")
         response = requests.get('https://httpbin.org/ip')
         data = response.json()
         self.ip = data['origin']
