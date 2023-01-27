@@ -47,7 +47,7 @@ ip = None
 client_ip = None
 process = None
 process2 = None
-checked = False
+checked = True
 
 stop_flag = threading.Event()
 stop_flag2 = threading.Event()
@@ -111,6 +111,24 @@ def execute_command():
             print("Error")
             break
 
+def removeUFWPort(_port):
+    output = subprocess.run(["ufw", "status", "verbose"], capture_output=True, text=True)
+    # Search for the rule with port 1080
+    for line in output.stdout.split("\n"):
+        if port in line:
+            rule_number = line.split()[0]
+            rule_status = line.split()[1]
+            if rule_status == "allow":
+                # Delete the rule
+                subprocess.run(["ufw", "delete", rule_number])
+                print(f"Rule {rule_number} containing port {_port} was deleted.")
+            else:
+                print(f"Rule {rule_number} containing port {_port} is not 'allow'.")
+
+def addUFWPort(allowip,_port):
+    command = f"sudo ufw allow from {allowip} to any port {_port}"
+    subprocess.run(command.split(), check=True)
+
 def execute_command2():
     global process2
     global stop_flag2
@@ -119,8 +137,9 @@ def execute_command2():
     stop_flag2.set()
     stop_flag2.clear()
 
-    command = f"sudo ufw allow from {allowip} to any port {port+2}"
-    subprocess.run(command.split(), check=True)
+    removeUFWPort(port+2)
+    addUFWPort(allowip,port+2)
+
     process2 = None
     process2 = subprocess.Popen(["proxy", "sps","-P",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag2.is_set():
