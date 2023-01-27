@@ -63,7 +63,7 @@ class SOCKS5handler:
 
     def __init__(self, request):
         self.request = request
-        print(request)
+        print(request.raddr)
         response = requests.get('https://httpbin.org/ip')
         data = response.json()
         self.ip = data['origin']
