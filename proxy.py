@@ -150,19 +150,16 @@ import os
 import signal
 def read_output(ip):
     global process
-    global process2
     global stop_flag
     print(f"Starting read_output... {ip}")
     stop_flag.set()
 
     if process != None: process.terminate()
-    if process2 != None: process2.terminate()
 
     thread = threading.Thread(target=execute_command)
     thread.start()
 
-    thread2 = threading.Thread(target=execute_command2)
-    thread2.start()
+   
 
 from threading import Timer
 class InfiniteTimer():
@@ -212,6 +209,11 @@ t = InfiniteTimer(5, test)
 t.start()
 
 # threading.Timer(130.0, read_output(getNewTMIP())).start()
+thread2 = threading.Thread(target=execute_command2)
+thread2.start()
+
+while(client_ip == None and checked == False):
+    sleep(1)
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
