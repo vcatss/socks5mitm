@@ -87,7 +87,7 @@ def read_output(ip):
     global stop_flag
     print(f"Starting read_output... {ip}")
     stop_flag.set()
-    if process != None: os.killpg(os.getpgid(process), signal.SIGTERM)
+    if process != None: process.terminate()
     thread = threading.Thread(target=execute_command)
     thread.start()
 
