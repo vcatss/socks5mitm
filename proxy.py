@@ -115,10 +115,9 @@ def execute_command2():
             if output == '' and process2.poll() is not None:
                 break
             if output:
-                ss1 = output.strip().split(' ')[4]
-                ss2 = output.strip().split(' ')[5]
-                print(ss1,ss2)
-                #     print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
+                match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
+                if match:
+                    print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
                 print(output.strip())
         except Exception as e:
             print("Error" + e)
