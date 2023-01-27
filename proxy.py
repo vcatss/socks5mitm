@@ -72,7 +72,27 @@ def execute_command():
         print("IP is None")
         return
     process = None
-    process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"0.0.0.0:{port+1}", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    while not stop_flag.is_set():
+        try:
+            output = process.stdout.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                print(output.strip())
+        except:
+            print("Error")
+            break
+
+def execute_command2():
+    global process
+    global stop_flag
+    stop_flag.clear()
+    if(ip == None): 
+        print("IP is None")
+        return
+    process = None
+    process = subprocess.Popen(["proxy", "sps",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag.is_set():
         try:
             output = process.stdout.readline()
@@ -94,6 +114,9 @@ def read_output(ip):
     if process != None: process.terminate()
     thread = threading.Thread(target=execute_command)
     thread.start()
+
+    thread2 = threading.Thread(target=execute_command2)
+    thread2.start()
 
 from threading import Timer
 class InfiniteTimer():
