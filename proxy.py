@@ -115,8 +115,7 @@ def read_output(ip):
     thread = threading.Thread(target=execute_command)
     thread.start()
 
-    thread2 = threading.Thread(target=execute_command2)
-    thread2.start()
+    
 
 from threading import Timer
 class InfiniteTimer():
@@ -164,7 +163,8 @@ def test():
 
 t = InfiniteTimer(5, test)
 t.start()
-
+thread2 = threading.Thread(target=execute_command2)
+thread2.start()
 # threading.Timer(130.0, read_output(getNewTMIP())).start()
 
 print(f"Starting 127.0.0.1:{port}...")
