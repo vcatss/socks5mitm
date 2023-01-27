@@ -69,14 +69,14 @@ class SOCKS5handler:
         if raddr_match:
             client_ip = raddr_match.group(1)
             client_port = raddr_match.group(2)
-            print(f"{bcolors.OKCYAN}[*] {client_ip}:{client_port} Connection {bcolors.WHITE}")
+            #print(f"{bcolors.OKCYAN}[*] {client_ip}:{client_port} Connection {bcolors.WHITE}")
             self.client_ip = client_ip
             self.client_port = client_port
 
         response = requests.get('https://httpbin.org/ip')
         data = response.json()
         self.ip = data['origin']
-        print(f"{bcolors.OKCYAN}[*] {self.client_ip} {bcolors.WHITE}")
+        #print(f"{bcolors.OKCYAN}[*] {self.client_ip} {bcolors.WHITE}")
 
     def handle(self):
         self.handle_handshake()
