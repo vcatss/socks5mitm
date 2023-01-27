@@ -95,7 +95,8 @@ def execute_command():
             if output == '' and process.poll() is not None:
                 break
             if output:
-                print(output.strip())
+                #print(output.strip())
+                pass
         except:
             print("Error")
             break
