@@ -28,6 +28,7 @@ socks5_port = int(socks5.split(':')[1])
 
 ip = None
 process = None
+process2 = None
 
 stop_flag = threading.Event()
 
@@ -85,18 +86,16 @@ def execute_command():
             break
 
 def execute_command2():
-    global process
+    global process2
     global stop_flag
     stop_flag.clear()
-    if(ip == None): 
-        print("IP is None")
-        return
-    process = None
-    process = subprocess.Popen(["proxy", "sps","-P",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    process2 = None
+    process2 = subprocess.Popen(["proxy", "sps","-P",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag.is_set():
         try:
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
+            output = process2.stdout.readline()
+            if output == '' and process2.poll() is not None:
                 break
             if output:
                 print(output.strip())
@@ -108,10 +107,14 @@ import os
 import signal
 def read_output(ip):
     global process
+    global process2
     global stop_flag
     print(f"Starting read_output... {ip}")
     stop_flag.set()
+
     if process != None: process.terminate()
+    if process2 != None: process2.terminate()
+
     thread = threading.Thread(target=execute_command)
     thread.start()
 
