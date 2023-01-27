@@ -126,9 +126,9 @@ def execute_command2():
                 break
             if output:
                 print(str(output.strip()))
-                match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
-                client_ip = match.group(1)
-                print(f"{bcolors.OKBLUE}[==>*] {client_ip} {bcolors.WHITE}")
+                # match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
+                # client_ip = match.group(1)
+                #print(f"{bcolors.OKBLUE}[==>*] {client_ip} {bcolors.WHITE}")
                 # if match:
                 #     if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0" and match.group(1) != allowip:
                 #         print(f"{bcolors.FAIL}[*] Checked Fail {bcolors.WHITE}")
