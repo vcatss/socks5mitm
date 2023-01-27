@@ -10,5 +10,4 @@ output = subprocess.run(["ufw", "status", "numbered"], capture_output=True, text
 for line in output.stdout.split("\n"):
     numbers = re.findall(r'\d+', line)
     if len(numbers) > 2:
-        print(f"Rule number: {numbers[0]}")
-        print(f"Port number: {numbers[1]}")
+        print(f"Rule number: {numbers[0]} : Port number: {numbers[1]}")
