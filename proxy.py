@@ -72,7 +72,7 @@ def execute_command():
         print("IP is None")
         return
     process = None
-    process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"0.0.0.0:{port+1}", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", f"127.0.0.1:{port+1}", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag.is_set():
         try:
             output = process.stdout.readline()
