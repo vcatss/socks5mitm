@@ -54,8 +54,8 @@ def getNewTMIP():
     if (int(response.json()['code']) == 5) == True:
         print("Get new IP fail")
         print(f"Wait for {response.json()['data']['next_request']+1}")
-        #sleep(response.json()['data']['next_request']+1)
-        getNewTMIP()
+        sleep(response.json()['data']['next_request']+1)
+        return getNewTMIP()
     else:
         print("Get new IP success")
         ip = response.json()['data']['socks5']
