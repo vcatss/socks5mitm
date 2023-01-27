@@ -140,18 +140,6 @@ def execute_command2():
                         else:
                             print(f"{bcolors.OKGREEN}[*] Checked OK {bcolors.WHITE}")
                             checked = True
-
-                if "connection refused from" in s:
-                    ip_match = re.search(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", s)
-                    client_ip = ip_match.group()
-                    print(f"{bcolors.OKBLUE}[==>*] {client_ip} {bcolors.WHITE}")
-                    if match:
-                        if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0" and client_ip != allowip:
-                            print(f"{bcolors.FAIL}[*] Checked Fail {bcolors.WHITE}")
-                            checked = False
-                        else:
-                            print(f"{bcolors.OKGREEN}[*] Checked OK {bcolors.WHITE}")
-                            checked = True
                         #print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
                 # print(output.strip())
         except Exception as e:
@@ -224,8 +212,6 @@ t.start()
 thread2 = threading.Thread(target=execute_command2)
 thread2.start()
 
-while(client_ip == None and checked == False):
-    sleep(1)
 
 print(f"Starting 127.0.0.1:{port}...")
 start_server(Handle, port=port)
