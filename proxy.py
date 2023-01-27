@@ -137,8 +137,8 @@ def execute_command2():
     stop_flag2.set()
     stop_flag2.clear()
 
-    removeUFWPort(port+2)
-    addUFWPort(allowip,port+2)
+    removeUFWPort(str(port+2))
+    addUFWPort(allowip,str(port+2))
 
     process2 = None
     process2 = subprocess.Popen(["proxy", "sps","-P",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
