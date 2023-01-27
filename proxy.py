@@ -46,6 +46,7 @@ process = None
 process2 = None
 
 stop_flag = threading.Event()
+stop_flag2 = threading.Event()
 
 class Handle(SOCKS5handler):
     def handle(self):
@@ -103,12 +104,12 @@ def execute_command():
 
 def execute_command2():
     global process2
-    global stop_flag
-    stop_flag.clear()
+    global stop_flag2
+    stop_flag2.clear()
 
     process2 = None
     process2 = subprocess.Popen(["proxy", "sps","-P",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    while not stop_flag.is_set():
+    while not stop_flag2.is_set():
         try:
             output = process2.stdout.readline()
             if output == '' and process2.poll() is not None:
@@ -130,6 +131,7 @@ def read_output(ip):
     global stop_flag
     print(f"Starting read_output... {ip}")
     stop_flag.set()
+    stop_flag2.set()
 
     if process != None: process.terminate()
     if process2 != None: process2.terminate()
