@@ -119,12 +119,15 @@ def removeUFWPort(_port):
         if len(numbers) > 1:
             if _port ==numbers[1]:
                 print(f"Rule number: {numbers[0]} : Port number: {numbers[1]}")
-                subprocess.run(["ufw", "--force","delete", numbers[0]],"-y", check=True)
+                ss = subprocess.run(["ufw", "--force","delete", numbers[0]],"-y", check=True)
+                print(ss)
+                return
                 
 
 def addUFWPort(allowip,_port):
     command = f"sudo ufw allow from {allowip} to any port {_port}"
     subprocess.run(command.split(), check=True)
+    return
 
 def execute_command2():
     global process2
