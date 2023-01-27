@@ -112,18 +112,14 @@ def execute_command():
             break
 
 def removeUFWPort(_port):
-    output = subprocess.run(["ufw", "status", "verbose"], capture_output=True, text=True)
+    output = subprocess.run(["ufw", "status", "numbered"], capture_output=True, text=True)
     # Search for the rule with port 1080
     for line in output.stdout.split("\n"):
         if _port in line:
             rule_number = line.split()[0]
-            rule_status = line.split()[1]
-            if rule_status == "allow":
-                # Delete the rule
-                subprocess.run(["ufw", "delete", rule_number])
-                print(f"Rule {rule_number} containing port {_port} was deleted.")
-            else:
-                print(f"Rule {rule_number} containing port {_port} is not 'allow'.")
+            print(f"Remove rule {rule_number} - {line}")
+            subprocess.run(["ufw", "delete", rule_number])
+            
 
 def addUFWPort(allowip,_port):
     command = f"sudo ufw allow from {allowip} to any port {_port}"
