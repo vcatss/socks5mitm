@@ -135,6 +135,7 @@ def execute_command2():
                         if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0" and match.group(1) != allowip:
                             print(f"{bcolors.FAIL}[*] Checked Fail {bcolors.WHITE}")
                             checked = False
+                            process2.terminate()
                         else:
                             print(f"{bcolors.OKGREEN}[*] Checked OK {bcolors.WHITE}")
                             checked = True
