@@ -31,19 +31,22 @@ import argparse, sys
 parser=argparse.ArgumentParser()
 
 parser.add_argument("--port", help="Port of proxy")
-parser.add_argument("--socks5", help="Import socks5 proxy")
+parser.add_argument("--allowip", help="Allow ip")
+# parser.add_argument("--socks5", help="Import socks5 proxy")
 
 args=parser.parse_args()
 
+allowip = args.allowip
 port = int(args.port) if args.port != None else 4444
-socks5 = args.socks5 
+# socks5 = args.socks5 
 
-socks5_ip = socks5.split(':')[0]
-socks5_port = int(socks5.split(':')[1])
+# socks5_ip = socks5.split(':')[0]
+# socks5_port = int(socks5.split(':')[1])
 
 ip = None
 process = None
 process2 = None
+checked = False
 
 stop_flag = threading.Event()
 stop_flag2 = threading.Event()
@@ -52,10 +55,12 @@ class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
-        skt = proxy.socks5((socks5_ip, socks5_port), address)
+        skt = proxy.socks5(("127.0.0.1", port+1), address)
         exchange_loop(self.request, skt, self)
 
     def handle_address(self):
+        global checked
+        if checked == False: return
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
@@ -105,6 +110,7 @@ def execute_command():
 def execute_command2():
     global process2
     global stop_flag2
+    global checked
     stop_flag2.clear()
 
     process2 = None
@@ -117,6 +123,12 @@ def execute_command2():
             if output:
                 match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
                 if match:
+                    if match.group(1) == allowip:
+                        print(f"{bcolors.OKGREEN}[*] Checked OK {bcolors.WHITE}")
+                        checked = True
+                    else:
+                        print(f"{bcolors.FAIL}[*] Checked Fail {bcolors.WHITE}")
+                        checked = False
                     print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
                 print(output.strip())
         except Exception as e:
