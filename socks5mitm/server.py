@@ -28,14 +28,13 @@ send_bytes = 0
 _host = ""
 _port = 0
 
-def exchange_loop(client, remote, handler,checked=True):
+def exchange_loop(client, remote, handler):
     """
     Sends client's data to remote and remote's to client.
     """
     
     while True:
         ready, _, _ = select.select([client, remote], [], [])
-        print(f">>>>>>> {checked}")
         if client in ready:
             data = client.recv(4096)
             handler.handle_send(data)

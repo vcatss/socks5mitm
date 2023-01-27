@@ -59,17 +59,13 @@ class Handle(SOCKS5handler):
         self.handle_handshake()
         address = self.handle_address()
         skt = proxy.socks5(("127.0.0.1", port+1), address)
-        exchange_loop(self.request, skt, self)
+        exchange_loop(self.request, skt, self,checked)
 
     def handle_address(self):
         global checked
         global client_ip
-        #if checked == False: return
-
-        # while(client_ip == None):
-        #     sleep(0.1)
-
-        # client_ip = None
+        
+        print(f"{bcolors.HEADER}[*] Handle address {checked} {bcolors.WHITE}")
 
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
