@@ -115,7 +115,7 @@ def removeUFWPort(_port):
     output = subprocess.run(["ufw", "status", "verbose"], capture_output=True, text=True)
     # Search for the rule with port 1080
     for line in output.stdout.split("\n"):
-        if port in line:
+        if _port in line:
             rule_number = line.split()[0]
             rule_status = line.split()[1]
             if rule_status == "allow":
