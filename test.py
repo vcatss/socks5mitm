@@ -1,5 +1,5 @@
 import subprocess
-
+import re
 # Port number to search for
 port = "1080"
 
@@ -8,5 +8,5 @@ output = subprocess.run(["ufw", "status", "numbered"], capture_output=True, text
 
 # Search for the rule with port 1080
 for line in output.stdout.split("\n"):
-    number = str(line).split(' ')[0].replace('[','').replace(']','')
+    number = re.findall(r'\d+', line)[0]
     print(number)
