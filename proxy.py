@@ -64,18 +64,12 @@ class Handle(SOCKS5handler):
     def handle_address(self):
         global checked
         global client_ip
-        while checked == None: sleep(0.01)
         print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE} : {checked}")
-        if checked == False:
-            checked = None
-            message = self.request.recv(0)
-            self.request.send(protocol.server_connection(0))
-            return protocol.client_connection(message)
-        else:
-            checked = None
-            message = self.request.recv(1024)
-            self.request.send(protocol.server_connection(0))
-            return protocol.client_connection(message)
+        checked = None
+        message = self.request.recv(1024)
+        self.request.send(protocol.server_connection(0))
+        return protocol.client_connection(message)
+            
 
 def getNewTMIP():
     global ip
