@@ -8,5 +8,5 @@ output = subprocess.run(["ufw", "status", "numbered"], capture_output=True, text
 
 # Search for the rule with port 1080
 for line in output.stdout.split("\n"):
-    number = re.findall(r'\d+', line)[0]
+    number = re.findall(r'\d+', line)
     print(number)
