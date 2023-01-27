@@ -112,7 +112,8 @@ def execute_command():
             break
 
 def removeUFWPort(_port):
-    output = subprocess.run(["ufw", "status", "numbered"], capture_output=True, text=True)
+    output = subprocess.run(["sudo","ufw", "status", "numbered"], capture_output=True, text=True)
+    print(str(output.stdout))
     # Search for the rule with port 1080
     for line in output.stdout.split("\n"):
         if _port in line:
