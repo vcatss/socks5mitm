@@ -118,7 +118,7 @@ def removeUFWPort(_port):
         if _port in line:
             rule_number = line.split()[0]
             print(f"Remove rule {rule_number} - {line}")
-            command = f"sudo ufw deletet {rule_number}"
+            command = f"sudo ufw delete {rule_number[0]}"
             subprocess.run(command.split(), check=True)
             
 
