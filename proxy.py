@@ -35,7 +35,6 @@ class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
-        print(address)
         skt = proxy.socks5((socks5_ip, socks5_port), address)
         exchange_loop(self.request, skt, self)
 

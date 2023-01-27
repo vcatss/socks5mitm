@@ -67,10 +67,12 @@ class SOCKS5handler:
         import re
         raddr_match = re.search(r"raddr=\('(.*?)', (.*?)\)", str(raddr))
         if raddr_match:
-            ip = raddr_match.group(1)
-            port = raddr_match.group(2)
-            raddr = (ip, int(port))
-            print(f"{bcolors.OKCYAN}[*] {ip}:{port} Connection {bcolors.WHITE}")
+            client_ip = raddr_match.group(1)
+            client_port = raddr_match.group(2)
+            print(f"{bcolors.OKCYAN}[*] {client_ip}:{client_port} Connection {bcolors.WHITE}")
+            self.client_ip = client_ip
+            self.client_port = client_port
+
         response = requests.get('https://httpbin.org/ip')
         data = response.json()
         self.ip = data['origin']
@@ -93,13 +95,13 @@ class SOCKS5handler:
     def handle_send(self, data):
         global send_bytes
         send_bytes += len(data)/1024/1024
-        print(f"{bcolors.WARNING}[{self.ip}:{_port}] send >>> {round(send_bytes, 4)} {bcolors.WHITE}")
+        print(f"{bcolors.WARNING}[{self.client_ip}:{self.client_port}] send >>> {round(send_bytes, 4)} {bcolors.WHITE}")
 
     def handle_recive(self, data):
         global recv_bytes
         recv_bytes += len(data)/1024/1024
         #recv_mbs = recv_bytes / 1024
-        print(f"{bcolors.OKGREEN}[{self.ip}:{_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
+        print(f"{bcolors.OKGREEN}[{self.client_ip}:{self.client_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
 
 def start_server(sockshandler=SOCKS5handler, host="0.0.0.0", port=4444):
     class TCPhandler(socketserver.BaseRequestHandler):
