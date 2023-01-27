@@ -63,11 +63,11 @@ class SOCKS5handler:
 
     def __init__(self, request):
         self.request = request
+        print(request)
         response = requests.get('https://httpbin.org/ip')
         data = response.json()
         self.ip = data['origin']
         print(f"{bcolors.OKCYAN}[*] {self.ip} {bcolors.WHITE}")
-
 
     def handle(self):
         self.handle_handshake()

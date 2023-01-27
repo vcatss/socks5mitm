@@ -35,6 +35,7 @@ class Handle(SOCKS5handler):
     def handle(self):
         self.handle_handshake()
         address = self.handle_address()
+        print(address)
         skt = proxy.socks5((socks5_ip, socks5_port), address)
         exchange_loop(self.request, skt, self)
 
@@ -74,11 +75,15 @@ def execute_command():
     process = None
     process = subprocess.Popen(["proxy", "socks", "-t", "tcp", "-p", "0.0.0.0:4444", "-P", ip], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag.is_set():
-        output = process.stdout.readline()
-        if output == '' and process.poll() is not None:
+        try:
+            output = process.stdout.readline()
+            if output == '' and process.poll() is not None:
+                break
+            if output:
+                print(output.strip())
+        except:
+            print("Error")
             break
-        if output:
-            print(output.strip())
     
 import os
 import signal
