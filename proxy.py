@@ -64,7 +64,6 @@ class Handle(SOCKS5handler):
     def handle_address(self):
         global checked
         global client_ip
-        print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE} : {checked}")
         checked = None
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
@@ -120,6 +119,8 @@ def execute_command2():
     stop_flag2.set()
     stop_flag2.clear()
 
+    command = f"sudo ufw allow from {allowip} to any port {port+2}"
+    subprocess.run(command.split(), check=True)
     process2 = None
     process2 = subprocess.Popen(["proxy", "sps","-P",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while not stop_flag2.is_set():
