@@ -103,6 +103,12 @@ class SOCKS5handler:
         #recv_mbs = recv_bytes / 1024
         print(f"{bcolors.OKGREEN}[{self.client_ip}:{self.client_port}] revc <<< {round(recv_bytes, 4)} {bcolors.WHITE}")
 
+
+from socketserver import ThreadingTCPServer, BaseRequestHandler
+import http.client
+
+
+
 def start_server(sockshandler=SOCKS5handler, host="0.0.0.0", port=4444):
     class TCPhandler(socketserver.BaseRequestHandler):
         handler = sockshandler
@@ -116,8 +122,28 @@ def start_server(sockshandler=SOCKS5handler, host="0.0.0.0", port=4444):
     class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
         allow_reuse_address = True
 
+    class HTTPProxyHandler(BaseRequestHandler):
+        def handle(self):
+            # Parse the incoming request
+            request = self.request.recv(4096).decode()
+            request_parts = request.split("\n")
+            method, path, _ = request_parts[0].split(" ")
+            headers = {}
+            for line in request_parts[1:]:
+                if ":" in line:
+                    name, value = line.split(":", 1)
+                    headers[name.strip()] = value.strip()
+            # Connect to the destination server
+            conn = http.client.HTTPSConnection(headers["Host"])
+            conn.request(method, path, headers=headers)
+            # Forward the response back to the client
+            response = conn.getresponse()
+            self.request.sendall(response.read())
+
     global _host,_port
     _host = host
     _port = port
     ThreadedTCPServer((host, port), TCPhandler).serve_forever()
+   # ThreadingTCPServer(("0.0.0.0", port), HTTPProxyHandler).serve_forever()
+
 
