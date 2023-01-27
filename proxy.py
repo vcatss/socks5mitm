@@ -44,6 +44,7 @@ port = int(args.port) if args.port != None else 4444
 # socks5_port = int(socks5.split(':')[1])
 
 ip = None
+client_ip = None
 process = None
 process2 = None
 checked = False
@@ -60,7 +61,8 @@ class Handle(SOCKS5handler):
 
     def handle_address(self):
         global checked
-        if checked == False: return
+        global client_ip
+        if client_ip != "127.0.0.1" and  client_ip != "localhost" and client_ip != "0.0.0.0"  and checked == False: return
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
@@ -111,6 +113,7 @@ def execute_command2():
     global process2
     global stop_flag2
     global checked
+    global client_ip
     stop_flag2.clear()
 
     process2 = None
@@ -122,6 +125,7 @@ def execute_command2():
                 break
             if output:
                 match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
+                client_ip = match.group(1)
                 if match:
                     if match.group(1) == allowip:
                         print(f"{bcolors.OKGREEN}[*] Checked OK {bcolors.WHITE}")
