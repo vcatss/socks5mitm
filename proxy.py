@@ -47,7 +47,7 @@ ip = None
 client_ip = None
 process = None
 process2 = None
-checked = True
+checked = False
 
 stop_flag = threading.Event()
 stop_flag2 = threading.Event()
