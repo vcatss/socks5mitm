@@ -64,9 +64,7 @@ class Handle(SOCKS5handler):
     def handle_address(self):
         global checked
         global client_ip
-        
         print(f"{bcolors.HEADER}[*] Handle address {checked} {bcolors.WHITE}")
-
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
