@@ -125,9 +125,11 @@ def execute_command2():
             if output == '' and process2.poll() is not None:
                 break
             if output:
-                print(str(output.strip()))
-                if "connected" in str(output.strip):
-                    match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
+                s = str(output.strip())
+                print(s)
+                if "connected" in s:
+                    print("???????")
+                    match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', s)
                     client_ip = match.group(1)
                     print(f"{bcolors.OKBLUE}[==>*] {client_ip} {bcolors.WHITE}")
                     if match:
@@ -137,7 +139,7 @@ def execute_command2():
                         else:
                             print(f"{bcolors.OKGREEN}[*] Checked OK {bcolors.WHITE}")
                             checked = True
-                        print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
+                        #print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
                 # print(output.strip())
         except Exception as e:
             print("Error" + str(e) )
