@@ -54,6 +54,7 @@ stop_flag2 = threading.Event()
 
 class Handle(SOCKS5handler):
     def handle(self):
+        print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE}")
         self.handle_handshake()
         address = self.handle_address()
         skt = proxy.socks5(("127.0.0.1", port+1), address)
@@ -64,8 +65,11 @@ class Handle(SOCKS5handler):
         global client_ip
         #if checked == False: return
 
-        print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE}")
-        
+        # while(client_ip == None):
+        #     sleep(0.1)
+
+        # client_ip = None
+
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
