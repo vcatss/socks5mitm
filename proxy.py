@@ -56,10 +56,6 @@ class Handle(SOCKS5handler):
     def handle(self):
         global checked
         global client_ip
-
-        print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE}")
-        if checked == False: return
-
         self.handle_handshake()
         address = self.handle_address()
         skt = proxy.socks5(("127.0.0.1", port+1), address)
