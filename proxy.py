@@ -137,7 +137,7 @@ def execute_command2():
                     print(f"{bcolors.OKCYAN}[*] {match.group(1)}:{match.group(2)} Connection {bcolors.WHITE}")
                 print(output.strip())
         except Exception as e:
-            print("Error" + e)
+            print("Error" + str(e) )
             break
     
 import os
