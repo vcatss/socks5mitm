@@ -63,6 +63,9 @@ class Handle(SOCKS5handler):
         global checked
         global client_ip
         #if checked == False: return
+
+        print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE}")
+        
         message = self.request.recv(1024)
         self.request.send(protocol.server_connection(0))
         return protocol.client_connection(message)
