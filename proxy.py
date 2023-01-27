@@ -76,12 +76,12 @@ def getNewTMIP():
     response = requests.post(url, headers=headers, data=json.dumps(data))
     print(response.json())
     if (int(response.json()['code']) == 5) == True:
-        print("Get new IP fail")
-        print(f"Wait for {response.json()['data']['next_request']+1}")
+        #print("Get new IP fail")
+        #print(f"Wait for {response.json()['data']['next_request']+1}")
         sleep(response.json()['data']['next_request']+1)
         return getNewTMIP()
     else:
-        print("Get new IP success")
+        print(f"{bcolors.HEADER}[*] Get new IP success {bcolors.WHITE}")
         ip = response.json()['data']['socks5']
         return response.json()['data']['socks5']
 
@@ -124,6 +124,7 @@ def execute_command2():
             if output == '' and process2.poll() is not None:
                 break
             if output:
+                print(str(output.strip()))
                 match = re.search(r'(\d+\.\d+\.\d+\.\d+):(\d+)', str(output.strip()))
                 client_ip = match.group(1)
                 print(f"{bcolors.OKBLUE}[*] {client_ip} {bcolors.WHITE}")
