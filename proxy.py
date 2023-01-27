@@ -47,7 +47,7 @@ ip = None
 client_ip = None
 process = None
 process2 = None
-checked = None
+checked = False
 
 stop_flag = threading.Event()
 stop_flag2 = threading.Event()
@@ -66,7 +66,7 @@ class Handle(SOCKS5handler):
         global client_ip
         while checked == None: sleep(0.01)
         print(f"{bcolors.HEADER}[*] It run whenever connection {bcolors.WHITE} : {checked}")
-        if checked == None:
+        if checked == False:
             message = self.request.recv(0)
             self.request.send(protocol.server_connection(0))
             return protocol.client_connection(message)
