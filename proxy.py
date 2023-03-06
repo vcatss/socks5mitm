@@ -74,7 +74,7 @@ def getNewTMIP():
     global ip
     url = "https://tmproxy.com/api/proxy/get-new-proxy"
     headers = {"Content-Type": "application/json"}
-    data = {"api_key": "da1e019fd5b8265e4177a85f29645d20", "id_location": 1}
+    data = {"api_key": "1e20d3b694bf347fc64190d7367cc829", "id_location": 1}
     response = requests.post(url, headers=headers, data=json.dumps(data))
     print(response.json())
     if (int(response.json()['code']) == 5) == True:
