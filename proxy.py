@@ -36,7 +36,7 @@ parser.add_argument("--allowip", help="Allow ip")
 
 args=parser.parse_args()
 
-allowip = args.allowip
+allowip = args.allowip.split(',')
 port = int(args.port) if args.port != None else 4444
 # socks5 = args.socks5 
 
@@ -138,7 +138,9 @@ def execute_command2():
     stop_flag2.clear()
 
     removeUFWPort(str(port+2))
-    addUFWPort(allowip,str(port+2))
+    #foreach item in allowip
+    for item in allowip:
+        addUFWPort(item,str(port+2))
 
     process2 = None
     process2 = subprocess.Popen(["proxy", "sps","-P",f"socks5://127.0.0.1:{port}","-p",f":{port+2}"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
